@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  client:
+    build: 
+      context: ./frontend
+    container_name: clientapp_c
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+  server:
+    build: 
+      context: ./ 
+    container_name: serverapp_c
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://127.0.0.1:27017/proshop
+      - JWT_SECRET=abcdefgh1254hgdsq
+      - PAYPAL_CLIENT_ID=Ae3Lj_ZkY-gDZhEaaFHMQ2uyQu0wpy9oVybHXj_1on80_qC8Tr3hIqnNwIAhllNwKG6Uyxq8W_UsZFOZ
+      - PAYPAL_APP_SECRET=EAVddXx8LBtAdvNrwAt0LRY7D17NVSaTuIu2b556TPQqJGmTyW0TSLVwcTNCXGZ7c0vC_skZJ3FANC64
+      - PAYPAL_API_URL=https://api-m.sandbox.paypal.com
+      - NODE_ENV = DEV
+    depends_on:
+      - mongodb
+    volumes:
+      - ./:/app
+      - /app/node_modules 
+
+  mongodb:
+    image: mongo:latest 
+    ports:
+      - "27017:27017"
+    volumes:
+      - database:/data/db
+volumes:
+      database:
